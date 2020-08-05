@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django.urls import path
+# Importaciones para ver las imagenes cuando desarrollamos
+from django.conf.urls.static import static
+from django.conf import settings
 
 #apps
 from jonugram import views as local_views
@@ -13,4 +16,6 @@ urlpatterns = [
 
     # apps
     path('posts/', posts_views.list_posts),
-]
+
+# Le suma a urlpatterns una url estática con valor de MEDIA_URL y el path que estamos
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

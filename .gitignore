@@ -2,8 +2,12 @@
 db.sqlite3
 __pycache__
 
+# Enviorenments
 venv/
 
 users/pictures
+media/
+static/
 
+# editor
 .vscode

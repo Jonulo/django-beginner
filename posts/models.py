@@ -1,26 +1,19 @@
-# # interactuar con el ORM:
-# from django.db import models
+# interactuar con el ORM:
+from django.db import models
+from django.contrib.auth.models import User
 
-# class User(models.Model):
+class Post(models.Model):
+    # cuando se borre el usuario se borren los posts
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-#     email = models.EmailField(unique=True)
-#     password = models.CharField(max_length=100)
+    # Hacer una importación circular, en lugar de importar arriba se hace así:
+    profile = models.ForeignKey('users.Profile', on_delete=models.CASCADE)
 
-#     first_name= models.CharField(max_length=100)
-#     last_name = models.CharField(max_length=100)
+    title =models.CharField(max_length=255)
+    photo = models.ImageField(upload_to='post/photos')
 
-#     id_admin = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
-#     # Incluye mas texto que un charfield
-#     bio = models.TextField(blank=True)
-
-#     birthdate = models.DateField(blank=True, null=True)
-    
-#     # Cuando se cree la instancia en la BD automaticamente le agrega la fecha:
-#     created = models.DateTimeField(auto_now_add=True)
-#     # Guarda la fecha en la que se edito por ultima vez:
-#     modify = models.DateTimeField(auto_now=True)
-    
-#     # Para que por default regrese cierto dato como representativo...
-#     def __str__(self):
-#         return self.email
+    def __str__(self):
+        return '{} by @ {}'.format(self.title, self.user.username)
