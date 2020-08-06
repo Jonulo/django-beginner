@@ -138,3 +138,6 @@ STATICFILES_FINDERS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Ahora estara la carpeta MEDIA dentro del path principal (ESTO ES PARA DESARROLLO)
 MEDIA_URL = '/media/'
+
+# Url para redireccionar cuando NO HAY SESION
+LOGIN_URL = '/users/login/'

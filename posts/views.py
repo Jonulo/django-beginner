@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from datetime import datetime
 
+# django para validar si hay alguna sesión abierta
+from django.contrib.auth.decorators import login_required
+
 posts = [
     {
         'title': 'Mont Blac',
@@ -30,6 +33,9 @@ posts = [
         'photo': 'https://picsum.photos/500/700/?image=1076',
     }
 ]
+
+# Url a donde redirijir está definida en setting.py
+@login_required
 def list_posts(request):
     return render(request, 'posts/feed.html', {'posts': posts})
 
