@@ -1,10 +1,15 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from datetime import datetime
 
 # django para validar si hay alguna sesión abierta
 from django.contrib.auth.decorators import login_required
 
-posts = [
+# Models
+from posts.models import Post
+
+# Forms
+from posts.forms import PostForm
+posts_hardcode = [
     {
         'title': 'Mont Blac',
         'user': {
@@ -37,8 +42,30 @@ posts = [
 # Url a donde redirijir está definida en setting.py
 @login_required
 def list_posts(request):
+    posts = Post.objects.all().order_by('-created')
+
     return render(request, 'posts/feed.html', {'posts': posts})
 
+@login_required
+def create_post(request):
+    
+    if(request.method == 'POST'):
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('feed')
+    else:
+        form = PostForm()
+    
+    return render(
+        request =request,
+        template_name ='posts/new.html',
+        context={
+            'form': form,
+            'user': request.user,
+            'profile': request.user.profile
+        }
+    )
 # De esta forma implementamos datos de forma rapida dentro de HTML:
 # ----- 
 # def list_posts(request):
