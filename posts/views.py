@@ -1,9 +1,12 @@
-from django.shortcuts import render, redirect
+# from django.shortcuts import render, redirect
 from datetime import datetime
+from django.urls import reverse_lazy
 
 # django para validar si hay alguna sesión abierta
 from django.contrib.auth.decorators import login_required
-
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView, CreateView, ListView
 # Models
 from posts.models import Post
 
@@ -39,33 +42,73 @@ posts_hardcode = [
     }
 ]
 
-# Url a donde redirijir está definida en setting.py
-@login_required
-def list_posts(request):
-    posts = Post.objects.all().order_by('-created')
+class PostDetailView(LoginRequiredMixin, DetailView):
+    """Return Post Detail"""
 
-    return render(request, 'posts/feed.html', {'posts': posts})
+    template_name = 'posts/detailPost.html'
+    queryset = Post.objects.all()
+    context_object_name = 'post'
 
-@login_required
-def create_post(request):
+
+class PostsFeedView(LoginRequiredMixin, ListView):
+    """Return all published posts"""
+
+    template_name = 'posts/feed.html'
+    model = Post
+    ordering = ('-created')
+    paginate_by = 30
+    context_object_name = 'posts'
+
+
+# ABAJO ESTA LA FORMA DE COMO SE HACE LAS VISTAS SIN BASARLAS EN CLASES
+
+# Url a donde redirigir está definida en settings.py
+
+# @login_required
+# def list_posts(request):
+#     posts = Post.objects.all().order_by('-created')
+
+#     return render(request, 'posts/feed.html', {'posts': posts})
+
+#Vista creada con class-bassed views
+class CreatePostView(LoginRequiredMixin, CreateView):
+    """Create view post"""
+    template_name = 'posts/new.html'
+    form_class = PostForm
+    # evalua hasta que lo necesite:
+    success_url = reverse_lazy('posts:feed')
+
+    def get_context_data(self, **kwargs):
+        """Ädd user and profile to context"""
+        context = super().get_context_data(**kwargs)
+        context['user'] = self.request.user
+        context['profile'] = self.request.user.profile
+        return context
+
+# ----
+# la vista creada con function y NO con clases
+# @login_required
+# def create_post(request):
     
-    if(request.method == 'POST'):
-        form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('feed')
-    else:
-        form = PostForm()
+#     if(request.method == 'POST'):
+#         form = PostForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('posts:feed')
+#     else:
+#         form = PostForm()
     
-    return render(
-        request =request,
-        template_name ='posts/new.html',
-        context={
-            'form': form,
-            'user': request.user,
-            'profile': request.user.profile
-        }
-    )
+#     return render(
+#         request =request,
+#         template_name ='posts/new.html',
+#         context={
+#             'form': form,
+#             'user': request.user,
+#             'profile': request.user.profile
+#         }
+#     )
+
+
 # De esta forma implementamos datos de forma rapida dentro de HTML:
 # ----- 
 # def list_posts(request):

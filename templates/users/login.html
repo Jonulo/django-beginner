@@ -10,7 +10,7 @@
     <p class="alert alert-danger">{{ error }}</p>
     {% endif %}
 
-    <form method="POST" action="{% url 'login' %}">
+    <form method="POST" action="{% url 'users:login' %}">
         <!-- protección de django que habilita el form si se hizo un GET antes -->
         {% csrf_token %}
 
@@ -21,6 +21,6 @@
             <input type="password" class="form-control" placeholder="Password" name="password">
         </div>
         <button class="btn btn-primary btn-block mt-5" type="submit">Sign in!</button>
-        <p><a href="{% url "signup" %}">Sign up!</a></p>
+        <p><a href="{% url "users:signup" %}">Sign up!</a></p>
     </form>
 {% endblock %}
