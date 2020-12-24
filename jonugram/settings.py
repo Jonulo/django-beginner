@@ -142,5 +142,5 @@ MEDIA_URL = '/media/'
 
 # Url para redireccionar cuando NO HAY SESION
 LOGIN_URL = '/users/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'posts:feed'
 LOGOUT_REDIRECT_URL = LOGIN_URL

@@ -71,6 +71,8 @@ class SignupForm(forms.Form):
         user = User.objects.create_user(**data)
         profile = Profile(user=user)
         profile.save()
+
+
 class ProfileForm(forms.Form):
 
     website = forms.URLField(max_length=200, required=True)

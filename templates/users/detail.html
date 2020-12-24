@@ -18,7 +18,7 @@
             </div>
             <div class="col-sm-8">
                 <h2 style="font-weight: 100;">
-                    {{ request.user.username }}
+                    {{ user.username }}
                     {% if user == request.user %}
                         <a
                             href="{% url "users:update_profile" %}"
@@ -71,5 +71,9 @@
             </div>
             {% endfor %}
         </div>
+    </div>
+    <div>
+        <p>{{ user.last_name }}</p>
+        <p>{{ request.user }}</p>
     </div>
 {% endblock %}
